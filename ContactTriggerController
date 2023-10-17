@@ -1,0 +1,36 @@
+Public class ContactTriggerController(){
+	Public Static Void countContact(Boolean isAfter,Boolean isInsert,Boolean isUpdate,Boolean isUndelete,Boolean isDelete,List<Contact>newLisCon,List<Contact>oldLisCon){
+		Set<Id> accountIds = new Set<Id>();
+
+		if(isAfter && (isInsert || isUpdate || isUndelete)){
+			for(Contact con:newLisCon){
+				if(con.AccountId != null){
+					accountIds.add(con.AccountId);
+				}
+			}
+		}
+
+		if(isAfter && (isUpdate || isDelete)){
+			for(Contact con:oldLisCon){
+				if(con.AccountId != null){
+					accountIds.add(con.AccountId);
+				}
+			}
+		}
+
+		if(!accountIds.isEmpty()){
+			List<Account> accList = [SELECT Id, Number_of_Contacts__c, (SELECT Id FROM Contacts) 
+							 FROM Account WHERE Id IN : accountIds];
+			if(!accList.isEmpty()){
+				List<Account> updateAccList = new List<Account>();
+				for(Account acc:accList){
+					Account objAcc = new Account(Id = acc.Id, Number_of_Contacts__c = acc.Contacts.size());
+					updateAccList.add(objAcc);
+				}
+				if(!updateAccList.isEmpty()){
+					update updateAccList;
+				}
+			}
+		}
+	}
+}
