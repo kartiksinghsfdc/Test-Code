@@ -1,0 +1,3 @@
+trigger ContactTrigger on Contact (after insert, after update, after delete, after undelete) {
+	ContactTriggerController.countContact(trigger.isAfter,trigger.isInsert,trigger.isUpdate,trigger.isUndelete,trigger.isDelete,trigger.new,trigger.old);
+}
