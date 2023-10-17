@@ -1,0 +1,31 @@
+Public Class makeCallout{
+	Public Static Void getData(){
+		try{
+			HttpRequest req = new HttpRequest();
+			HttpResponse res = new HttpResponse();
+			Http http = new Http();
+
+			req.setEndpoint('https://postman-echo.com/get?foo1=bar1&foo2=bar2');
+			req.setMethod('GET');
+
+			// Set request headers
+			request.setHeader('Content-Type','application/json');
+
+			// Send the request
+			res = http.send(req);
+
+			// Check the response
+			if (res.getStatusCode() == 200) {
+				// Successful response
+				String responseBody = res.getBody();
+				System.debug('Response: ' + responseBody);
+			} else {
+				// Handle the error
+				System.debug('Error: ' + res.getStatus());
+			}
+		}
+        catch(System.CalloutException e){
+            System.debug('******error- ********** ' + e.getmessage());
+        }  
+	}
+}
